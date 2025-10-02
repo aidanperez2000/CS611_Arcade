@@ -21,6 +21,7 @@ public class Board {
     public final char MINUS_SIGN = '-';
     public final char PIPE_SIGN = '|';
     public final int SHUFFLE_TIMES = 300;
+    public final String QUIT_SIGN = "Q";
     private final Random rng = new Random();
 
     public int Height = DEFAULT_HEIGHT;
@@ -50,15 +51,24 @@ public class Board {
         Shuffle(boardArray, tiles);
         while (!Arrays.deepEquals(solution, boardArray)) {
             BuildBoard(boardArray);
-            System.out.println("Player, which tile do you want to slide to the empty space?");
-            int userValue = scanner.nextInt();
+            System.out.println("Player, which tile do you want to slide to the empty space?  (Enter " + QUIT_SIGN + " to quit)");
+            String input = scanner.nextLine();
+            int userValue = -1;
+            try {
+                userValue = Integer.parseInt(input);
+            }
+            catch (Exception e) {
+                System.out.println("Input is not a number.");
+            }
             Tile emptyTile = Tile.GetEmptyTile(tiles);
             List<Tile> possibleSwaps = Tile.GetPossibleSwaps(tiles, emptyTile);
             Tile tileToSwap = possibleSwaps.stream().filter(n -> n.Value == userValue).findFirst().orElse(null);
             if (tileToSwap == null)
-                throw new IllegalArgumentException("Invalid value to swap.  Choose a tile next to the empty one");
-            SwapTile(emptyTile, tileToSwap);
-            ArrangeBoardFromTiles(tiles, boardArray);
+                System.out.println("Invalid value to swap.  Choose a tile next to the empty one");
+            else {
+                SwapTile(emptyTile, tileToSwap);
+                ArrangeBoardFromTiles(tiles, boardArray);
+            }
         }
         //show the final board when game over
         BuildBoard(boardArray);
