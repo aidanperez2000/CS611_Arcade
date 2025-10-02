@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Tile {
     public Tile(int xPos, int yPos, int value) {
@@ -31,6 +32,6 @@ public class Tile {
         return tiles.stream().filter(
                         n -> (n.XPos == emptyTile.XPos && (n.YPos == emptyTile.YPos - 1 || n.YPos == emptyTile.YPos + 1))
                                 || (n.YPos == emptyTile.YPos && (n.XPos == emptyTile.XPos - 1 || n.XPos == emptyTile.XPos + 1)))
-                .toList();
+                .collect(Collectors.toList());
     }
 }
