@@ -53,21 +53,23 @@ public class Board {
             BuildBoard(boardArray);
             System.out.println("Player, which tile do you want to slide to the empty space?  (Enter " + QUIT_SIGN + " to quit)");
             String input = scanner.nextLine();
-            int userValue = -1;
+            if (input.equals(QUIT_SIGN)) {
+                break;
+            }
             try {
-                userValue = Integer.parseInt(input);
+                int userValue = Integer.parseInt(input);
+                Tile emptyTile = Tile.GetEmptyTile(tiles);
+                List<Tile> possibleSwaps = Tile.GetPossibleSwaps(tiles, emptyTile);
+                Tile tileToSwap = possibleSwaps.stream().filter(n -> n.Value == userValue).findFirst().orElse(null);
+                if (tileToSwap == null)
+                    System.out.println("Invalid value to swap.  Choose a tile next to the empty one");
+                else {
+                    SwapTile(emptyTile, tileToSwap);
+                    ArrangeBoardFromTiles(tiles, boardArray);
+                }
             }
             catch (Exception e) {
                 System.out.println("Input is not a number.");
-            }
-            Tile emptyTile = Tile.GetEmptyTile(tiles);
-            List<Tile> possibleSwaps = Tile.GetPossibleSwaps(tiles, emptyTile);
-            Tile tileToSwap = possibleSwaps.stream().filter(n -> n.Value == userValue).findFirst().orElse(null);
-            if (tileToSwap == null)
-                System.out.println("Invalid value to swap.  Choose a tile next to the empty one");
-            else {
-                SwapTile(emptyTile, tileToSwap);
-                ArrangeBoardFromTiles(tiles, boardArray);
             }
         }
         //show the final board when game over
