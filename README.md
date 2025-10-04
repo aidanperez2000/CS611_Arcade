@@ -13,7 +13,7 @@
 - DotsAndBoxes.java: allows user to play dots and boxes game
 - Game.java: base game class which other games inherit from
 - Orientation.java: enum that contains H and V, used to track whether a user enters a vertical or horizontal tile
-- Piece.java: base piece class which other classes that keep track of x-position and j-position inherit from
+- Piece.java: base piece class which other classes that keep track of x-position and y-position inherit from
 - SlidingPuzzle.java: allows user to play sliding puzzle game
 
 
