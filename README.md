@@ -7,9 +7,14 @@
 
 ## Files
 ---------------------------------------------------------------------------
-Main.java: contains main program that plays the game
-Board.java: keeps track of board with a given width and height and contains logic for playing the game
-Tile.java: keeps track of the tiles' values, x-positions, and y-positions.
+- Main.java: contains main program that plays the game
+- Board.java: keeps track of board with a given width and height
+- Tile.java: keeps track of the tiles' values, x-positions, and y-positions.
+- DotsAndBoxes.java: allows user to play dots and boxes game
+- Game.java: base game class which other games inherit from
+- Orientation.java: enum that contains H and V, used to track whether a user enters a vertical or horizontal tile
+- Piece.java: base piece class which other classes that keep track of x-position and j-position inherit from
+- SlidingPuzzle.java: allows user to play sliding puzzle game
 
 
 
@@ -18,6 +23,9 @@ Tile.java: keeps track of the tiles' values, x-positions, and y-positions.
 - The board has min height and min width of 2.  If the user enters a value less than 2, it sets a default value for the width and height and the console shows a friendly message to the user that it's setting the default values.
 - If the user enters a tile that doesn't exist in the board or cannot be moved, it throws an exception and writes this exception to the console.
 - Use of Tile class to keep track of tiles and their positions.
+- Tile class inherits from piece class which any class that uses x-positions and y-positions inherit from
+- All games inherit from Game class
+- Sliding puzzle keeps track of the number of moves a user makes
 
 
 
