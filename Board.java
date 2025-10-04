@@ -1,5 +1,6 @@
 import java.util.*;
 
+/*Class used for rendering board*/
 public class Board {
     public Board(int height, int width) {
         if (height < MIN_HEIGHT)
@@ -30,8 +31,9 @@ public class Board {
     /*Plays slide game.  Starts out with a shuffled board of
     * size Height by Width.  Allows user to move tile in empty space.
     * Continues playing until board is in order
-    * scanner: scanner for user input*/
-    public void PlaySlideGame(Scanner scanner) {
+    * scanner: scanner for user input
+    * player: player who is playing the game*/
+    public void PlaySlideGame(Scanner scanner, Player player) {
         //build the solution
         int[][] boardArray = new int[Height][Width];
         int boardValue = 1;
@@ -51,7 +53,7 @@ public class Board {
         Shuffle(boardArray, tiles);
         while (!Arrays.deepEquals(solution, boardArray)) {
             BuildBoard(boardArray);
-            System.out.println("Player, which tile do you want to slide to the empty space?  (Enter " + QUIT_SIGN + " to quit)");
+            System.out.println("Player " + player.GetPlayerName() + ", which tile do you want to slide to the empty space?  (Enter " + QUIT_SIGN + " to quit)");
             String input = scanner.nextLine();
             if (input.equals(QUIT_SIGN)) {
                 break;
@@ -60,12 +62,13 @@ public class Board {
                 int userValue = Integer.parseInt(input);
                 Tile emptyTile = Tile.GetEmptyTile(tiles);
                 List<Tile> possibleSwaps = Tile.GetPossibleSwaps(tiles, emptyTile);
-                Tile tileToSwap = possibleSwaps.stream().filter(n -> n.Value == userValue).findFirst().orElse(null);
+                Tile tileToSwap = possibleSwaps.stream().filter(n -> n.GetValue() == userValue).findFirst().orElse(null);
                 if (tileToSwap == null)
                     System.out.println("Invalid value to swap.  Choose a tile next to the empty one");
                 else {
                     SwapTile(emptyTile, tileToSwap);
                     ArrangeBoardFromTiles(tiles, boardArray);
+                    player.AddScore(1);
                 }
             }
             catch (Exception e) {
@@ -74,7 +77,8 @@ public class Board {
         }
         //show the final board when game over
         BuildBoard(boardArray);
-        System.out.println("Board has been played!  Good game!");
+        System.out.println("Board has been played! Congrats, " + player.GetPlayerName() + "!");
+        System.out.println("Num moves: " + player.GetScore());
     }
 
     /*Build margin row (Example for 3 by 3 board: +-+-+-+
@@ -133,7 +137,7 @@ public class Board {
         return tiles;
     }
 
-    /*Shuffle board by swapping tile positions a certain
+    /*Shuffle the board by swapping tile positions a certain
     * number of times
     * boardArray: board array that gets rearranged
     * tiles: list of tiles that has their positions swapped*/
@@ -152,17 +156,15 @@ public class Board {
     * tiles: List of tiles with new x and y positions
     * boardArray: array to rearrange*/
     private void ArrangeBoardFromTiles(List<Tile> tiles, int[][] boardArray) {
-        tiles.forEach(tile -> {
-            boardArray[tile.YPos][tile.XPos] = tile.Value;
-        });
+        tiles.forEach(tile -> boardArray[tile.YPos][tile.XPos] = tile.GetValue());
     }
 
     /*Swaps two tiles
     * emptyTile: empty tile to swap, the new value will be tileToSwap's value
     * tileToSwap: tile to swap with empty tile, will now have empty tile's value */
     private void SwapTile(Tile emptyTile, Tile tileToSwap) {
-        int tempVal = emptyTile.Value;
-        emptyTile.Value = tileToSwap.Value;
-        tileToSwap.Value = tempVal;
+        int tempVal = emptyTile.GetValue();
+        emptyTile.SetValue(tileToSwap.GetValue());
+        tileToSwap.SetValue(tempVal);
     }
 }

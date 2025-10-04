@@ -1,16 +1,27 @@
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Tile {
+/*Tile class which keeps track of a
+* tile's value at a certain position*/
+public class Tile extends Piece {
     public Tile(int xPos, int yPos, int value) {
-        XPos = xPos;
-        YPos = yPos;
+        super(xPos, yPos);
         Value = value;
     }
 
-    public int XPos;
-    public int YPos;
-    public int Value;
+    private int Value;
+
+    /*Get value of tile
+    * returns: value of tile*/
+    public int GetValue() {
+        return Value;
+    }
+
+    /*Set value of tile
+    * value: value to set tile to*/
+    public void SetValue(int value) {
+        Value = value;
+    }
 
     /*Gets the empty tile from a list of a tiles,
     * tiles: List of tiles to find empty
@@ -27,7 +38,7 @@ public class Tile {
     * tiles: tile list that contains list of all tiles in board
     * emptyTile: empty tile from list
     * returns tiles that are next to the empty tile, that is they're in the same row and
-    * next to the empty tile or in the some column and next to the empty tile*/
+    * next to the empty tile or in the same column and next to the empty tile*/
     public static List<Tile> GetPossibleSwaps(List<Tile> tiles, Tile emptyTile) {
         return tiles.stream().filter(
                         n -> (n.XPos == emptyTile.XPos && (n.YPos == emptyTile.YPos - 1 || n.YPos == emptyTile.YPos + 1))

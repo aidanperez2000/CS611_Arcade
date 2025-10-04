@@ -7,7 +7,7 @@
 
 ## Files
 ---------------------------------------------------------------------------
-SlidePuzzle.java: contains main program that plays the game
+Main.java: contains main program that plays the game
 Board.java: keeps track of board with a given width and height and contains logic for playing the game
 Tile.java: keeps track of the tiles' values, x-positions, and y-positions.
 
@@ -23,11 +23,11 @@ Tile.java: keeps track of the tiles' values, x-positions, and y-positions.
 
 ## How to compile and run
 ---------------------------------------------------------------------------
-1. Navigate to the directory "SlidePuzzle" in the terminal.
+1. Navigate to the directory "CS611_Arcade" in the terminal.
 2. Run the following commands:
 ```
 javac *.java
-java SlidePuzzle
+java Main
 ```
 
 
