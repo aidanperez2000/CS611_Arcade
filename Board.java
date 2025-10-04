@@ -1,170 +1,105 @@
-import java.util.*;
+package dots;
 
-/*Class used for rendering board*/
+import core.Player;
+
+/**
+ * Board holds all edges/boxes and enforces Dots & Boxes rules.
+ * Coordinates:
+ * H edges: r in [0..rows], c in [0..cols-1]
+ * V edges: r in [0..rows-1], c in [0..cols]
+ */
 public class Board {
-    public Board(int height, int width) {
-        if (height < MIN_HEIGHT)
-            System.out.println("Height is invalid value.  Leaving as default height of " + DEFAULT_HEIGHT);
-        else
-            Height = height;
+    private final int rows; // number of boxes vertically
+    private final int cols; // number of boxes horizontally
 
-        if (width < MIN_WIDTH)
-            System.out.println("Width is invalid value.  Leaving as default width of " + DEFAULT_WIDTH);
-        else
-            Width = width;
-    }
+    private final Edge[][] h; // (rows+1) x cols : horizontal edges
+    private final Edge[][] v; // rows x (cols+1) : vertical edges
+    private final Box[][] boxes; // rows x cols
+    private int remainingEdges;
 
-    public final int DEFAULT_HEIGHT = 3;
-    public final int DEFAULT_WIDTH = 3;
-    public final int MIN_HEIGHT = 2;
-    public final int MIN_WIDTH = 2;
-    public final char PLUS_SIGN = '+';
-    public final char MINUS_SIGN = '-';
-    public final char PIPE_SIGN = '|';
-    public final int SHUFFLE_TIMES = 300;
-    public final String QUIT_SIGN = "Q";
-    private final Random rng = new Random();
+    public Board(int rows, int cols) {
+        if (rows < 1 || cols < 1) throw new IllegalArgumentException("rows/cols >= 1");
+        this.rows = rows; this.cols = cols;
 
-    public int Height = DEFAULT_HEIGHT;
-    public int Width = DEFAULT_WIDTH;
+// allocate edges
+        h = new Edge[rows + 1][cols];
+        v = new Edge[rows][cols + 1];
+        for (int r = 0; r < rows + 1; r++)
+            for (int c = 0; c < cols; c++)
+                h[r][c] = new Edge();
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < cols + 1; c++)
+                v[r][c] = new Edge();
 
-    /*Plays slide game.  Starts out with a shuffled board of
-    * size Height by Width.  Allows user to move tile in empty space.
-    * Continues playing until board is in order
-    * scanner: scanner for user input
-    * player: player who is playing the game*/
-    public void PlaySlideGame(Scanner scanner, Player player) {
-        //build the solution
-        int[][] boardArray = new int[Height][Width];
-        int boardValue = 1;
-        for (int i = 0; i < Height; i++) {
-            for (int j = 0; j < Width; j++) {
-                boardArray[i][j] = boardValue++;
+// boxes reference edges by adjacency
+        boxes = new Box[rows][cols];
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                boxes[r][c] = new Box(
+                        h[r][c], // top
+                        v[r][c+1], // right
+                        h[r+1][c], // bottom
+                        v[r][c] // left
+                );
             }
         }
-        //the final element will be set to -1 so we have an empty space
-        boardArray[Height - 1][Width - 1] = -1;
-        //make a copy of the solution to keep track of the original
-        int[][] solution = new int[Height][Width];
-        for (int i = 0; i < Height; i++) {
-            System.arraycopy(boardArray[i], 0, solution[i], 0, Width);
-        }
-        List<Tile> tiles = BuildTilesFromBoardArray(boardArray);
-        Shuffle(boardArray, tiles);
-        while (!Arrays.deepEquals(solution, boardArray)) {
-            BuildBoard(boardArray);
-            System.out.println("Player " + player.GetPlayerName() + ", which tile do you want to slide to the empty space?  (Enter " + QUIT_SIGN + " to quit)");
-            String input = scanner.nextLine();
-            if (input.equals(QUIT_SIGN)) {
-                break;
-            }
-            try {
-                int userValue = Integer.parseInt(input);
-                Tile emptyTile = Tile.GetEmptyTile(tiles);
-                List<Tile> possibleSwaps = Tile.GetPossibleSwaps(tiles, emptyTile);
-                Tile tileToSwap = possibleSwaps.stream().filter(n -> n.GetValue() == userValue).findFirst().orElse(null);
-                if (tileToSwap == null)
-                    System.out.println("Invalid value to swap.  Choose a tile next to the empty one");
-                else {
-                    SwapTile(emptyTile, tileToSwap);
-                    ArrangeBoardFromTiles(tiles, boardArray);
-                    player.AddScore(1);
-                }
-            }
-            catch (Exception e) {
-                System.out.println("Input is not a number.");
-            }
-        }
-        //show the final board when game over
-        BuildBoard(boardArray);
-        System.out.println("Board has been played! Congrats, " + player.GetPlayerName() + "!");
-        System.out.println("Num moves: " + player.GetScore());
+        remainingEdges = (rows + 1) * cols + rows * (cols + 1);
     }
 
-    /*Build margin row (Example for 3 by 3 board: +-+-+-+
-    * Returns margin as string*/
-    private String BuildMargin() {
-        StringBuilder margin = new StringBuilder();
-        for (int i = 0; i < Width; i++) {
-            margin.append(PLUS_SIGN);
-            margin.append(MINUS_SIGN);
+    public int getRows() { return rows; }
+    public int getCols() { return cols; }
+
+    /** Is the specified edge already claimed? */
+    public boolean isEdgeClaimed(Orientation o, int r, int c) {
+        return getEdge(o, r, c).isClaimed();
+    }
+
+    /** Returns uppercase initial of owner of a box or null if unowned. */
+    public Character getBoxOwnerInitial(int r, int c) {
+        Player p = boxes[r][c].getOwner();
+        return p == null ? null : Character.toUpperCase(p.getName().charAt(0));
+    }
+    /**
+     * Claims an edge for a player and returns number of boxes completed by this move.
+     * @throws IndexOutOfBoundsException if coordinates are out of range
+     * @throws IllegalStateException if the edge is already claimed
+     */
+    public int claimEdge(Orientation o, int r, int c, Player p) {
+        Edge e = getEdge(o, r, c);
+        if (e.isClaimed()) throw new IllegalStateException("Edge already claimed");
+        e.claim(p);
+        remainingEdges--;
+        int completed = 0;
+        if (o == Orientation.H) {
+            if (r > 0) completed += completeIfReady(r-1, c, p); // box above
+            if (r < rows) completed += completeIfReady(r, c, p); // box below
+        } else { // V
+            if (c > 0) completed += completeIfReady(r, c-1, p); // box left
+            if (c < cols) completed += completeIfReady(r, c, p); // box right
         }
-        margin.append(PLUS_SIGN);
-        return margin.toString();
+        return completed;
     }
 
-    /*Builds row for a given row
-    * arrayRow: Row to build row for
-    * Returns row as string*/
-    private String BuildRow(int[] arrayRow) {
-        StringBuilder row = new StringBuilder();
-        for (int i = 0; i < Width; i++) {
-            row.append(PIPE_SIGN);
-            if (arrayRow[i] == -1) {
-                row.append(" ");
-            }
-            else {
-                row.append(arrayRow[i]);
-            }
+    private int completeIfReady(int r, int c, Player p) {
+        Box b = boxes[r][c];
+        if (!b.hasOwner() && b.isCompleted()) {
+            b.setOwner(p);
+            return 1;
         }
-        row.append(PIPE_SIGN);
-        return row.toString();
+        return 0;
     }
 
-    /*Builds board with rows and margins for a given array
-    * boardArray: array to build board for*/
-    private void BuildBoard(int[][] boardArray) {
-        for (int row = 0; row < Height; row++) {
-            System.out.println(BuildMargin());
-            System.out.println(BuildRow(boardArray[row]));
+    public int edgesRemaining() { return remainingEdges; }
+
+    private Edge getEdge(Orientation o, int r, int c) {
+        if (o == Orientation.H) {
+            if (r < 0 || r > rows || c < 0 || c >= cols)
+                throw new IndexOutOfBoundsException("H edge out of range");
+            return h[r][c];
+        } else {
+            if (r < 0 || r >= rows || c < 0 || c > cols)
+                throw new IndexOutOfBoundsException("V edge out of range");
+            return v[r][c];
         }
-        System.out.println(BuildMargin());
-    }
-
-    /*Takes a board array and arranges a list of tiles from it
-    * boardArray: array that contains numbers in board
-    * returns a list of tiles with xPos = value's horizontal position,
-    * yPos = value's vertical position, value = value*/
-    private List<Tile> BuildTilesFromBoardArray(int[][] boardArray) {
-        List<Tile> tiles = new ArrayList<>();
-        /*iterating through y first since arrays do vertical and then
-         * horizontal*/
-        for (int y = 0; y < Height; y++) {
-            for (int x = 0; x < Width; x++) {
-                tiles.add(new Tile(x, y, boardArray[y][x]));
-            }
-        }
-        return tiles;
-    }
-
-    /*Shuffle the board by swapping tile positions a certain
-    * number of times
-    * boardArray: board array that gets rearranged
-    * tiles: list of tiles that has their positions swapped*/
-    private void Shuffle(int[][] boardArray, List<Tile> tiles) {
-        for (int i = 0; i < SHUFFLE_TIMES; i++) {
-            Tile emptyTile = Tile.GetEmptyTile(tiles);
-            List<Tile> possibleSwaps = Tile.GetPossibleSwaps(tiles, emptyTile);
-            Tile tileToSwap = possibleSwaps.get(rng.nextInt(possibleSwaps.size()));
-            SwapTile(emptyTile, tileToSwap);
-        }
-        ArrangeBoardFromTiles(tiles, boardArray);
-    }
-
-    /*Takes a list of tiles and rearranges board array from the tile's y-values
-    * and x-values
-    * tiles: List of tiles with new x and y positions
-    * boardArray: array to rearrange*/
-    private void ArrangeBoardFromTiles(List<Tile> tiles, int[][] boardArray) {
-        tiles.forEach(tile -> boardArray[tile.YPos][tile.XPos] = tile.GetValue());
-    }
-
-    /*Swaps two tiles
-    * emptyTile: empty tile to swap, the new value will be tileToSwap's value
-    * tileToSwap: tile to swap with empty tile, will now have empty tile's value */
-    private void SwapTile(Tile emptyTile, Tile tileToSwap) {
-        int tempVal = emptyTile.GetValue();
-        emptyTile.SetValue(tileToSwap.GetValue());
-        tileToSwap.SetValue(tempVal);
     }
 }
