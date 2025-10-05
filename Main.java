@@ -24,6 +24,7 @@ public class Main {
                 System.out.println("[" + gameSelection + "] - " + games[i].GetGameName());
             }
             int gameToPlay = scanner.nextInt();
+            scanner.nextLine();
             if (gameToPlay < 1 || gameToPlay > games.length) {
                 System.out.println("Invalid game selection. Please select from one of the available options.");
             }
