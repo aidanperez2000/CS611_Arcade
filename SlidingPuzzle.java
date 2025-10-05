@@ -8,7 +8,6 @@ public class SlidingPuzzle extends Game {
     public SlidingPuzzle(Board board, Player player) {
         super(board, player);
     }
-
     /*Plays slide game.  Starts out with a shuffled board of
      * size Height by Width.  Allows user to move tile in empty space.
      * Continues playing until board is in order

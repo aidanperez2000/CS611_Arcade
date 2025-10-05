@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-/*Base game class other games inherit from*/
+/* Base game class other games inherit from */
 public abstract class Game {
     public Game(Board board, Player player) {
         this.board = board;
@@ -9,11 +9,10 @@ public abstract class Game {
     protected Board board;
     protected Player player;
 
-    /*Base play method for playing the game
+    /* Base play method for playing the game
     * scanner: scanner for input*/
     public abstract void Play(Scanner scanner);
 
-    /*Get the game name
-    * returns: name of game*/
+    /* Get the game name */
     public abstract String GetGameName();
 }
