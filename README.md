@@ -635,6 +635,7 @@ Shuxun completed 1 box(es)! Go again!
 Shuxun's turn. Enter edge coordinates and orientation (x,y,H/V) or 'Q' to quit:
 input:
 2,3,H
+output:
 Scores: Aidan: 4 | Shuxun: 5
 
 Current Board:
