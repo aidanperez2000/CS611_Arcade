@@ -271,8 +271,4 @@ public class DotsAndBoxes extends Game {
             System.out.println("It's a tie! Great game!");
         }
     }
-
-    public String GetGameName() {
-        return "Dots and Boxes";
-    }
 }

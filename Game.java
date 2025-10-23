@@ -12,7 +12,4 @@ public abstract class Game {
     /* Base play method for playing the game
     * scanner: scanner for input*/
     public abstract void Play(Scanner scanner);
-
-    /* Get the game name */
-    public abstract String GetGameName();
 }
