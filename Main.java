@@ -22,6 +22,7 @@ public class Main {
                 gameChoice = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a valid number!");
+                return;
             }
             Game game = null;
             if (gameChoice == 1)
