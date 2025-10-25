@@ -2,6 +2,10 @@ import java.util.Scanner;
 
 /* Base game class other games inherit from */
 public abstract class Game {
+    public Game(Board board) {
+        this.board = board;
+    }
+
     public Game(Board board, Player player) {
         this.board = board;
         this.player = player;

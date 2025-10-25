@@ -98,11 +98,11 @@ public class Main {
     private static Game CreateQuoridor(Scanner scanner) {
         System.out.println("Player 1, what is your name?");
         String name1 = scanner.nextLine();
-        QuoridorPlayer player1 = new QuoridorPlayer(name1);
+        QuoridorPlayer player1 = new QuoridorPlayer(name1, CellValue.PLAYER_1.ordinal());
         System.out.println("Player 2, what is your name?");
         String name2 = scanner.nextLine();
-        QuoridorPlayer player2 = new QuoridorPlayer(name2);
-        QuoridorBoard board = new QuoridorBoard();
+        QuoridorPlayer player2 = new QuoridorPlayer(name2, CellValue.PLAYER_2.ordinal());
+        Board board = new Board(9, 9);
         return new Quoridor(board, player1, player2);
     }
 }
