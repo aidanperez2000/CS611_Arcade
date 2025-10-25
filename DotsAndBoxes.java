@@ -13,10 +13,10 @@ public class DotsAndBoxes extends Game {
     private List<Edge> horizontalEdges;
     private List<Edge> verticalEdges;
     private List<Box> boxes;
-    private Player player2;
+    private final Player player2;
     private int currentPlayerId;
     private boolean gameOver;
-    private DotsAndBoxesRenderer renderer;
+    private final DotsAndBoxesRenderer renderer;
 
     public DotsAndBoxes(Board board, Player player1, Player player2) {
         super(board, player1);
@@ -270,9 +270,5 @@ public class DotsAndBoxes extends Game {
         } else {
             System.out.println("It's a tie! Great game!");
         }
-    }
-
-    public String GetGameName() {
-        return "Dots and Boxes";
     }
 }

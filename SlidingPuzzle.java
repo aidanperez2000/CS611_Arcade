@@ -60,10 +60,4 @@ public class SlidingPuzzle extends Game {
         System.out.println("Board has been played! Congrats, " + player.GetPlayerName() + "!");
         System.out.println("Num moves: " + player.GetScore());
     }
-
-    /*Get name of game
-    * returns: the name of game which is Sliding Puzzle*/
-    public String GetGameName() {
-        return "Sliding Puzzle";
-    }
 }
