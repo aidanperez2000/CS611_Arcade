@@ -29,7 +29,7 @@ public class QuoridorRenderer implements Renderer {
         return "";
     }
 
-    /*Not used in this class, just needs toe be implemented because of interface
+    /*Not used in this class, just needs to be implemented because of interface
     * width: width of board*/
     @Override
     public String BuildMargin(int width) {
