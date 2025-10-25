@@ -9,9 +9,9 @@ public class Quoridor extends Game {
         renderer = new QuoridorRenderer();
     }
 
-    QuoridorPlayer player1;
-    QuoridorPlayer player2;
-    QuoridorRenderer renderer;
+    private final QuoridorPlayer player1;
+    private final QuoridorPlayer player2;
+    private final QuoridorRenderer renderer;
 
     /*Play the Quoridor game:
     * scanner: scanner for input*/
