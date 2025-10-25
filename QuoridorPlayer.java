@@ -1,10 +1,10 @@
 /*Class for managing Quoridor players*/
 public class QuoridorPlayer extends Player {
+    private int wallsRemaining;
     public QuoridorPlayer(String name, int id) {
         super(name, id);
         wallsRemaining = 10;
     }
-    private int wallsRemaining;
 
     /*Get the number of walls remaining that
     * a player has
