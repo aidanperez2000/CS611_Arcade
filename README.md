@@ -16,12 +16,16 @@
 -	Board.java: Manages the game board of specified width and height.
 -	Tile.java: Tracks the tile ID, coordinates, and labels in the sliding puzzle game.
 -	Box.java: Represents a box in the Dots and Boxes game, tracking completion status and owner.
+- CellValue.java: Enum class that contains the different possible values in the Quoridor board array
 -	Edge.java: Represents a line connecting dots in the Dots and Boxes game, tracking activation status and owner.
 -	Player.java: Stores player information, including name, score, and player ID.
 -	DotsAndBoxes.java: Allows users to play the Dots and Boxes game.
 -	Game.java: Base game class that other games inherit from.
 -	Orientation.java: Enum that includes “HORIZONTAL” and “VERTICAL,” used to track edge direction.
 -	Piece.java: Base component class; other classes that require coordinates and labels inherit from it.
+- Quoridor.java: Class for playing the Quoridor game.
+- QuoridorPlayer.java: Class for Quoridor players, inherits from the Player class, also keeps track of walls remaining that a player has
+- QuoridorRenderer.java: Used for rendering Quoridor board, implements Renderer interface
 -	SlidingPuzzle.java: Allows users to play the sliding puzzle game.
 -	DotsAndBoxesRenderer.java: Renders the Dots and Boxes game interface.
 -	SlidePuzzleRenderer.java: Renders the sliding puzzle game interface.
@@ -40,6 +44,8 @@
 -	The sliding puzzle tracks the number of moves as the score.
 -	The Dots and Boxes game supports two-player mode. It uses Edge to track drawn lines and Box to track completed boxes.
 -	The Player class supports multiple players, each with a unique ID and score tracking.
+- The Quoridor game also supports two-player mode.  We use the QuoridorPlayer class to keep track of the players and the number of walls they have remaining.
+- We use an enum to keep track of the values in the Quoridor board.  If a player is in a position in that board, we set that board array's value to `CellValue.PLAYER_1` or `CellValue.PLAYER_2`.  If a wall is in that position, we set that value to `CellValue.HORIZONTAL_WALL` or `CellValue.VERTICAL_WALL`.
 
 
 
@@ -63,6 +69,11 @@ java Main
 -	Two-player mode; players take turns drawing lines between dots.
 -	Completing a box grants a point and allows an extra turn.
 -	The player with the most boxes at the end of the game wins.
+### Quoridor
+- Two-player mode: players take turns either moving or building a wall to block the other player
+- A player cannot move where there is a wall
+- Walls cannot completely block the other player
+- The player who gets to the other side fastest wins
 
 
 
@@ -656,3 +667,2213 @@ Final Scores:
 Aidan: 4 boxes
 Shuxun: 5 boxes
 Congratulations, Shuxun! You won!```
+Quoridor:
+```
+Output:
+Welcome to the Game Arcade!
+Which game do you want to play?
+[1] - Sliding Puzzle
+[2] - Dots and Boxes
+[3] - Quoridor
+Input:
+3
+Output:
+Player 1, what is your name?
+Input:
+Aidan
+Output:
+Player 2, what is your name?
+Input:
+Shuxun
+Output:
+Welcome to Quoridor!
+Game Rules:
+- Move your pawn one step at a time to reach the opposite side
+- You can move in 4 directions: N(orth), S(outh), E(ast), W(est)
+- You can place walls to block your opponent: use format 'W x,y,H/V'
+- Each player has 10 walls to use
+- Type 'Q' to quit
+
+
+Aidan (Player 1): 10 walls remaining
+Shuxun (Player 2): 10 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+         1         
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+         2         
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+S
+
+Aidan (Player 1): 10 walls remaining
+Shuxun (Player 2): 10 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+         1         
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+         2         
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+N
+Output:
+
+Aidan (Player 1): 10 walls remaining
+Shuxun (Player 2): 10 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+         1         
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+         2         
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+         1         
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+         2         
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 4,2,H
+Output:
+
+Aidan (Player 1): 10 walls remaining
+Shuxun (Player 2): 9 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+         1         
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+         2         
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 4,7,H
+Output:
+
+Aidan (Player 1): 9 walls remaining
+Shuxun (Player 2): 9 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+         1         
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+         2         
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W
+Output:
+
+Aidan (Player 1): 9 walls remaining
+Shuxun (Player 2): 9 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+         1         
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+       2           
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+S
+Output:
+
+Aidan (Player 1): 9 walls remaining
+Shuxun (Player 2): 9 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+                   
++ + + + + + + + + +
+         1         
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+       2           
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 4,4,H
+Output:
+
+Aidan (Player 1): 9 walls remaining
+Shuxun (Player 2): 8 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+                   
++ + + + + + + + + +
+         1         
++ + + + +-+-+ + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+       2           
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 2,7,H
+Output:
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+                   
++ + + + + + + + + +
+         1         
++ + + + +-+-+ + + +
+                   
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+ + + +
+       2           
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 4,3,V
+Output:
+
+Aidan (Player 1): 8 walls remaining
+Shuxun (Player 2): 7 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+                   
++ + + + + + + + + +
+        |1         
++ + + + +-+-+ + + +
+        |          
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+ + + +
+       2           
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 2,7,V
+Output:
+
+Aidan (Player 1): 7 walls remaining
+Shuxun (Player 2): 7 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+                   
++ + + + + + + + + +
+        |1         
++ + + + +-+-+ + + +
+        |          
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+ + + +
+    |  2           
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 7 walls remaining
+Shuxun (Player 2): 7 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+                   
++ + + + + + + + + +
+        |1         
++ + + + +-+-+ + + +
+        |          
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+ + + +
+    |    2         
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 7 walls remaining
+Shuxun (Player 2): 7 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+                   
++ + + + + + + + + +
+        |  1       
++ + + + +-+-+ + + +
+        |          
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+ + + +
+    |    2         
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 6,3,V
+Output:
+
+Aidan (Player 1): 7 walls remaining
+Shuxun (Player 2): 6 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+                   
++ + + + + + + + + +
+        |  1|      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+ + + +
+    |    2         
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 6,7,V
+Output:
+Wall would block a player's path to goal!
+Invalid move. Try again.
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+N
+Output:
+
+Aidan (Player 1): 7 walls remaining
+Shuxun (Player 2): 6 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+           1       
++ + + + + + + + + +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+ + + +
+    |    2         
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 5,4,H
+Output:
+Invalid move. Try again.
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+           1       
++ + + + + + + + + +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+ + + +
+    |      2       
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 7 walls remaining
+Shuxun (Player 2): 6 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+             1     
++ + + + + + + + + +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+ + + +
+    |      2       
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 6,3,H
+Output:
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+             1     
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+ + + +
+    |      2       
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W
+Output:
+
+Aidan (Player 1): 7 walls remaining
+Shuxun (Player 2): 5 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+           1       
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+ + + +
+    |      2       
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 7 walls remaining
+Shuxun (Player 2): 5 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+           1       
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+ + + +
+    |        2     
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W
+Output:
+
+Aidan (Player 1): 7 walls remaining
+Shuxun (Player 2): 5 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+         1         
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+ + + +
+    |        2     
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+N
+Output:
+
+Aidan (Player 1): 7 walls remaining
+Shuxun (Player 2): 5 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+         1         
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+             2     
++ + +-+-+-+-+ + + +
+    |              
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 6,6,H
+Output:
+
+Aidan (Player 1): 6 walls remaining
+Shuxun (Player 2): 5 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+         1         
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + + + + + +-+-+ +
+             2     
++ + +-+-+-+-+ + + +
+    |              
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W
+Output:
+
+Aidan (Player 1): 6 walls remaining
+Shuxun (Player 2): 5 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+         1         
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + + + + + +-+-+ +
+           2       
++ + +-+-+-+-+ + + +
+    |              
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 5,6,H
+Output:
+Invalid move. Try again.
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 4,6,H
+Output:
+
+Aidan (Player 1): 5 walls remaining
+Shuxun (Player 2): 5 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+         1         
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + + + +-+-+-+-+ +
+           2       
++ + +-+-+-+-+ + + +
+    |              
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W
+Output:
+
+Aidan (Player 1): 5 walls remaining
+Shuxun (Player 2): 5 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+         1         
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + + + +-+-+-+-+ +
+         2         
++ + +-+-+-+-+ + + +
+    |              
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 2,6,H
+Output:
+
+Aidan (Player 1): 4 walls remaining
+Shuxun (Player 2): 5 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+                   
++ + + + +-+-+ + + +
+         1         
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+         2         
++ + +-+-+-+-+ + + +
+    |              
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 4,2,V
+Output:
+Invalid move. Try again.
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 4,1,V
+Output:
+
+Aidan (Player 1): 4 walls remaining
+Shuxun (Player 2): 4 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |1         
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+         2         
++ + +-+-+-+-+ + + +
+    |              
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 4,6,V
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 4 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |1         
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ + + +
+        |   |      
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |2         
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 7,4,H
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |1         
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |2         
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |  1       
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |2         
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |  1       
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |  2       
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |    1     
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |  2       
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |    1     
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |    2     
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |      1   
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |    2     
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |      1   
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |      2   
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |        1 
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |      2   
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |        1 
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |        2 
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+S
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |    1 
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |        2 
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+N
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |    1 
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + + + + + +
+                 2 
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |  1   
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + + + + + +
+                 2 
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+N
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |  1   
++ + + + +-+-+ +-+-+
+        |   |    2 
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |1     
++ + + + +-+-+ +-+-+
+        |   |    2 
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |1     
++ + + + +-+-+ +-+-+
+        |   |  2   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+S
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 3 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |1 2   
++ + + + + + + + + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 5,5,H
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 2 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |1 2   
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 2 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |  2 1 
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+Invalid move. Try again.
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 2 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |2   1 
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+S
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 2 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |2     
++ + + + + +-+-+ + +
+                 1 
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+N
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 2 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |2     
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                 1 
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+S
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 2 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |2     
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |        1 
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 2 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |  2   
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |        1 
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+S
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 2 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |  2   
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |        1 
++ + + + + + + + + +
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 7,8,H
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 1 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |  2   
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |        1 
++ + + + + + + +-+-+
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 1 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |  2   
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |      1   
++ + + + + + + +-+-+
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W 5,8,H
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 0 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |  2   
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |      1   
++ + + + + +-+-+-+-+
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 0 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |  2   
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |    1     
++ + + + + +-+-+-+-+
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+E
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 0 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |    2 
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |    1     
++ + + + + +-+-+-+-+
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 0 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |    2 
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |  1       
++ + + + + +-+-+-+-+
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+N
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 0 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |        2 
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |  1       
++ + + + + +-+-+-+-+
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+W
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 0 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |          
++ + + + +-+-+ + + +
+        |        2 
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |1         
++ + + + + +-+-+-+-+
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Shuxun's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+N
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 0 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |        2 
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |1         
++ + + + + +-+-+-+-+
+    |              
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Aidan's turn.
+Enter move (N/S/E/W) or wall placement (W x,y,H/V) or Q to quit:
+Input:
+S
+Output:
+
+Aidan (Player 1): 3 walls remaining
+Shuxun (Player 2): 0 walls remaining
+
+
+Current Quoridor Board:
++ + + + + + + + + +
+                   
++ + + + + + + + + +
+        |        2 
++ + + + +-+-+ + + +
+        |          
++ + + + + + +-+-+ +
+        |   |      
++ + + + +-+-+ +-+-+
+        |   |      
++ + + + + +-+-+ + +
+                   
++ + +-+-+-+-+-+-+ +
+        |          
++ + +-+-+-+-+ + + +
+    |   |          
++ + + + + +-+-+-+-+
+    |    1         
++ + + + + + + + + +
+
+Legend
+1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
+
+Congratulations Aidan! You won!```
