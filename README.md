@@ -2877,4 +2877,5 @@ Current Quoridor Board:
 Legend
 1 = Player 1, 2 = Player 2, | = Vertical Wall, - = Horizontal Wall
 
-Congratulations Aidan! You won!```
+Congratulations Aidan! You won!
+```
