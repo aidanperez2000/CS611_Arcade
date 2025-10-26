@@ -666,7 +666,8 @@ Shuxun completed 1 box(es)! Go again!
 Final Scores:
 Aidan: 4 boxes
 Shuxun: 5 boxes
-Congratulations, Shuxun! You won!```
+Congratulations, Shuxun! You won!
+```
 Quoridor:
 ```
 Output:
